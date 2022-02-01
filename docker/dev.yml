@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  # ganachecli: simulated test rpc on dev environment
+  ganache-cli:
+    container_name: ganache-cli
+    build:
+      context: ./ganache
+    ports:
+      - 8545:8545
+
+  # truffle-suite
+  # volumes are used here to enable hot editing :) Nice trick!
+  truffle-app:
+    image: jslim/node17-truffle:latest
+    container_name: truffle-app
+    healthcheck:
+      test: curl -sf -X POST --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' ganache-cli:8545
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      - ganache-cli
+    ports:
+      - 3000:3000
+    tty: true
+    working_dir: /blockchain
+    volumes:
+      - ../src:/blockchain
+    entrypoint: ['sleep', 'infinity']
