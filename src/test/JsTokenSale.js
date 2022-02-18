@@ -58,4 +58,25 @@ contract('JsTokenSale', function(accounts) {
             assert(error.message.indexOf('revert') >= 0, 'cannot purchase more tokens than available');
         });
     });
+
+    it('ends token sale', function() {
+        return JsToken.deployed().then(function(instance) {
+            tokenInstance = instance;
+            return JsTokenSale.deployed();
+        }).then(function(instance) {
+            tokenSaleInstance = instance;
+            return tokenSaleInstance.endSale({ from: buyer });
+        }).then(assert.fail).catch(function(error) {
+            assert(error.message.indexOf('revert') >= 0, 'must be admin to end sale');
+            return tokenSaleInstance.endSale({ from: admin });
+        }).then(function(receipt) {
+            return tokenInstance.balanceOf(admin);
+        }).then(function(balance) {
+            assert.equal(balance.toNumber(), 999990, 'returns all unsold js token to admin');
+            // check that token price was reset when selfDestruct was called
+            return tokenSaleInstance.tokenPrice();
+        }).then(assert.fail).catch(function(error) {
+            assert(error.message.indexOf('does not exist') >= 0, 'token sale was destructed');
+        });
+    });
 });
