@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  # ganachecli: simulated test rpc on dev environment
+  ganache-cli:
+    image: trufflesuite/ganache-cli:latest
+    container_name: ganache-cli
+    ports:
+      - 8545:8545
+
+  blockchain-app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: blockchain-app
+    depends_on:
+      - ganache-cli
+    ports:
+      - 3000:3000
+    tty: true
+    working_dir: /blockchain
+    volumes:
+      - ../src:/blockchain
+    entrypoint: ['sleep', 'infinity']
