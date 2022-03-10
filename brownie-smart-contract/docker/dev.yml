@@ -3,14 +3,16 @@ version: '3'
 services:
   # ganachecli: simulated test rpc on dev environment
   ganache-cli:
-    image: trufflesuite/ganache-cli:latest
+    build:
+      context: ./ganache
+      dockerfile: Dockerfile
     container_name: ganache-cli
     ports:
       - 8545:8545
 
   blockchain-app:
     build:
-      context: ./
+      context: ./python
       dockerfile: Dockerfile
     container_name: blockchain-app
     depends_on:
