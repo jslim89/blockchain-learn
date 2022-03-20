@@ -16,3 +16,8 @@ networks:
     rinkeby:
         eth_usd_price_feed: '0x8A753747A1Fa494EC906cE90E9f37563A8AF630e'
         verify: true
+    # brownie networks add Development mainnet-fork-dev cmd=ganache-cli host=http://ganache-cli fork='https://eth-mainnet.alchemyapi.io/v2/$WEB3_ALCHEMY_PROJECT_ID' accounts=10 mnemonic=brownie port=8545
+    mainnet-fork-dev:
+        eth_usd_price_feed: '0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419'
+        verify: false
+
